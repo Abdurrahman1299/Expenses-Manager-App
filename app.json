@@ -1,0 +1,29 @@
+{
+  "expo": {
+    "name": "Expenses Tracker",
+    "slug": "expenses",
+    "version": "0.0.1",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "cover",
+      "backgroundColor": "#1e2429"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/icon.png",
+        "backgroundColor": "#1e2429"
+      },
+      "package": "com.abdurrahman09.text"
+    },
+    "web": {
+      "favicon": "./assets/favicon.png"
+    }
+  }
+}

@@ -2,7 +2,7 @@ import { StyleSheet, View } from "react-native";
 import React from "react";
 import { COLORS } from "../../constants/colors";
 import AddNew from "../utils/AddNew";
-import Pie from "./Pie";
+import Pie from "./Pie-old";
 
 export default function Chart({
   modalVisible,
@@ -14,13 +14,13 @@ export default function Chart({
 }) {
   return (
     <View style={styles.container}>
-      <Pie
+      {/* <Pie
         currentSection={currentSection}
         accuExpenses={accuExpenses}
         accuIncomes={accuIncomes}
         totalExpenses={totalExpenses}
         totalIncomes={totalIncomes}
-      />
+      /> */}
       <AddNew modalVisible={modalVisible} />
     </View>
   );

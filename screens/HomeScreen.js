@@ -10,11 +10,17 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { updateExpenses } from "../store/features/expensesSlice";
 import { updateIncomes } from "../store/features/incomesSlice";
+import { changeCurrency } from "../store/features/currencySlice";
+import Loading from "../components/ui/Loading";
+import { changeFirstLoading } from "../store/features/firstLoadingSlice";
 
 export default function HomeScreen() {
   //
   const expenses = useSelector((state) => state.expenses.value);
   const incomes = useSelector((state) => state.incomes.value);
+  //
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
   //
   useEffect(() => {
     const loadExpenses = async () => {
@@ -28,7 +34,7 @@ export default function HomeScreen() {
       }
       setIsLoading(false);
     };
-    loadExpenses();
+
     const loadIncomes = async () => {
       try {
         const storedEspenses = await AsyncStorage.getItem("incomes");
@@ -38,13 +44,36 @@ export default function HomeScreen() {
       } catch (e) {
         console.log(e);
       }
-      setIsLoading(false);
     };
+
+    const loadCurrency = async () => {
+      try {
+        const storedCurrency = await AsyncStorage.getItem("currency");
+        if (storedCurrency) {
+          dispatch(changeCurrency(JSON.parse(storedCurrency)));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    const loadFirstLoading = async () => {
+      try {
+        const storedFirstLoading = await AsyncStorage.getItem("firstLoading");
+        if (storedFirstLoading) {
+          dispatch(changeFirstLoading(JSON.parse(storedFirstLoading)));
+        }
+      } catch (e) {
+        console.log(e);
+      }
+    };
+
+    loadExpenses();
     loadIncomes();
-  }, [expenses.length || incomes.length]);
-  //
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
+    loadCurrency();
+    loadFirstLoading();
+    setIsLoading(false);
+  }, []);
   //
   const accuExpenses = expenses.reduce((acc, cur) => {
     const existingItem = acc.find((item) => item.title === cur.title);
@@ -90,13 +119,21 @@ export default function HomeScreen() {
     totalExpenses,
     totalIncomes,
   };
+
+  //
   return (
     <View style={styles.container}>
-      <SemiCircle />
-      <TotalSection />
-      <ToggleButtons />
-      <Chart shareableData={shareableData} />
-      <TransactionsList shareableData={shareableData} isLoading={isLoading} />
+      {!isLoading ? (
+        <>
+          <SemiCircle />
+          <TotalSection />
+          <ToggleButtons />
+          <Chart shareableData={shareableData} />
+          <TransactionsList shareableData={shareableData} />
+        </>
+      ) : (
+        <Loading />
+      )}
     </View>
   );
 }

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Expenses Tracker",
-    "slug": "expenses",
+    "name": "Expenses Manager",
+    "slug": "expenses_manager",
     "version": "0.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

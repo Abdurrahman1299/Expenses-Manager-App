@@ -48,12 +48,12 @@ export default function NewTransactionScreen({ navigation }) {
   };
   //
   function handleAddTransaction() {
-    if (amount && amount.trim() !== "" && !isNaN(amount) && selectedId) {
+    if (amount && !isNaN(amount) && selectedId) {
       if (currentSection === "expenses" && selectedId.startsWith("e")) {
         dispatch(addExpense(itemData));
       } else if (currentSection === "incomes" && selectedId.startsWith("i")) {
         dispatch(addIncome(itemData));
-      }
+      } else return;
       goBack();
     }
   }

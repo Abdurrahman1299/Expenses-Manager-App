@@ -1,27 +1,14 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
 import { COLORS } from "../../constants/colors";
 import AddNew from "../utils/AddNew";
-import Pie from "./Pie-old";
+import LinearChart from "./LinearChart";
 
-export default function Chart({
-  modalVisible,
-  currentSection,
-  accuExpenses,
-  accuIncomes,
-  totalExpenses,
-  totalIncomes,
-}) {
+export default function Chart({ shareableData }) {
+  //
   return (
     <View style={styles.container}>
-      {/* <Pie
-        currentSection={currentSection}
-        accuExpenses={accuExpenses}
-        accuIncomes={accuIncomes}
-        totalExpenses={totalExpenses}
-        totalIncomes={totalIncomes}
-      /> */}
-      <AddNew modalVisible={modalVisible} />
+      <LinearChart shareableData={shareableData} />
+      <AddNew />
     </View>
   );
 }
@@ -29,7 +16,7 @@ export default function Chart({
 const styles = StyleSheet.create({
   container: {
     backgroundColor: COLORS.d,
-    height: 280,
+    height: 120,
     width: "90%",
     borderRadius: 12,
     paddingVertical: 8,

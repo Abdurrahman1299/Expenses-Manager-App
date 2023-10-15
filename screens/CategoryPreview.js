@@ -1,5 +1,5 @@
 import { FlatList, StyleSheet, Text, View } from "react-native";
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import { COLORS } from "../constants/colors";
 import { useSelector } from "react-redux";
 import TransactionDetails from "../components/TransactionDetails";
@@ -9,10 +9,11 @@ export default function CategoryPreview({ navigation, route }) {
   //
   const expenses = useSelector((state) => state.expenses.value);
   const incomes = useSelector((state) => state.incomes.value);
+  const currency = useSelector((state) => state.currency.value);
+  const currentSection = useSelector((state) => state.currentSection.value);
   //
   const item = route.params.item;
   const headTitle = item.title;
-  const currentSection = route.params.currentSection;
 
   useEffect(() => {
     const updateTitle = () =>
@@ -23,22 +24,24 @@ export default function CategoryPreview({ navigation, route }) {
   }, [navigation]);
   //
   const data = (currentSection === "expenses" ? expenses : incomes).filter(
-    (item) => item.title === headTitle
+    (i) => i.title === headTitle
   );
   //
 
   const total = data
-    .map((item) => parseFloat(item.amount))
+    .map((i) => parseFloat(i.amount))
     .reduce((pre, cur) => pre + cur, 0);
   //
 
   return (
     <View style={styles.container}>
       <View style={styles.totalCat}>
-        <FontAwesome5 name={item.iconName} size={50} color={"#ffffff"} />
+        <FontAwesome5 name={item.iconName} size={50} color={COLORS.l} />
         <Text style={styles.text}>
           Total {currentSection} in {item.title}:{" "}
-          <Text style={{ fontWeight: "bold", color: COLORS.or }}>${total}</Text>
+          <Text style={{ fontWeight: "bold", color: COLORS.or }}>
+            {currency} {total}
+          </Text>
         </Text>
       </View>
       <FlatList
@@ -55,8 +58,8 @@ export default function CategoryPreview({ navigation, route }) {
 
 const styles = StyleSheet.create({
   container: {
-    borderTopColor: COLORS.l,
-    borderTopWidth: 2,
+    borderTopColor: COLORS.e,
+    borderTopWidth: 1,
     flex: 1,
     justifyContent: "center",
     alignItems: "center",

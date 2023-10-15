@@ -1,4 +1,11 @@
-import { Pressable, StyleSheet, Text, View, ScrollView } from "react-native";
+import {
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+  ScrollView,
+  FlatList,
+} from "react-native";
 import { COUNTRIES } from "../constants/countries";
 import { useDispatch, useSelector } from "react-redux";
 import { changeCurrency } from "../store/features/currencySlice";
@@ -7,11 +14,11 @@ import { nanoid } from "@reduxjs/toolkit";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Loading from "../components/ui/Loading";
+import ContinueBtn from "../components/ui/ContinueBtn";
 
 export default function CurrencyScreen({ navigation }) {
   const currency = useSelector((state) => state.currency.value);
   const dispatch = useDispatch();
-  const [currencySelected, setCurrencySelected] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
   //
@@ -33,12 +40,10 @@ export default function CurrencyScreen({ navigation }) {
   //
   function handleSelection(cur) {
     dispatch(changeCurrency(cur));
-    setCurrencySelected(true);
   }
 
-  function handlePressContinue() {
+  function handleContinue() {
     navigation.navigate("Home");
-    setCurrencySelected(false);
   }
 
   //
@@ -70,16 +75,7 @@ export default function CurrencyScreen({ navigation }) {
             ))}
           </ScrollView>
 
-          {currencySelected && (
-            <Pressable
-              onPress={handlePressContinue}
-              style={({ pressed }) => pressed && { opacity: 0.7 }}
-            >
-              <View style={[styles.button]}>
-                <Text style={styles.buttonTxt}>Continue</Text>
-              </View>
-            </Pressable>
-          )}
+          <ContinueBtn handleContinue={handleContinue} />
         </View>
       ) : (
         <Loading />
@@ -114,21 +110,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     color: COLORS.l,
     fontSize: SIZES.reg,
-  },
-  button: {
-    width: "100%",
-    justifyContent: "center",
-    alignItems: "center",
-    position: "absolute",
-    bottom: 25,
-  },
-  buttonTxt: {
-    backgroundColor: COLORS.or,
-    color: COLORS.bg,
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    fontSize: SIZES.reg,
-    fontWeight: "bold",
-    borderRadius: 8,
   },
 });

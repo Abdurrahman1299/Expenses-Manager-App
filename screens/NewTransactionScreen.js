@@ -1,6 +1,5 @@
 import {
   Keyboard,
-  Modal,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -14,28 +13,22 @@ import { useDispatch, useSelector } from "react-redux";
 import { addExpense } from "../store/features/expensesSlice";
 import ToggleButtons from "../components/ToggleButtons";
 import { addIncome } from "../store/features/incomesSlice";
-import SemiCircle from "../components/ui/SemiCircle";
 import CategoriesList from "../components/CategoriesList";
-import GobackBtn from "../components/ui/GobackBtn";
 import AddTransactionBtn from "../components/ui/AddTransactionBtn";
 
-export default function NewTransactionScreen({
-  currentSection,
-  isVisible,
-  modalHidden,
-  expensesSection,
-  incomesSection,
-}) {
+export default function NewTransactionScreen({ navigation }) {
   //
   const dispatch = useDispatch();
-  //
+  const currentSection = useSelector((state) => state.currentSection.value);
   const currency = useSelector((state) => state.currency.value);
+  //
+
   const [isFocused, setIsFocused] = useState(false);
   const [amount, setAmount] = useState(null);
   const [comment, setComment] = useState("");
-  const [iconName, setIconName] = useState(null);
-  const [color, setColor] = useState(null);
-  const [title, setTitle] = useState(null);
+  const [iconName, setIconName] = useState("");
+  const [color, setColor] = useState("");
+  const [title, setTitle] = useState("");
   const [selectedId, setSelectedId] = useState("");
   //
   function handleCategorySelect({ iconName, color, title, selectedId }) {
@@ -45,60 +38,37 @@ export default function NewTransactionScreen({
     setSelectedId(selectedId);
   }
   //
-  function dispatchExpenses() {
-    dispatch(
-      addExpense({
-        id: Date.now(),
-        amount: amount,
-        comment: comment,
-        iconName: iconName,
-        color: color,
-        title: title,
-      })
-    );
-    handleGoback();
-  }
-  function dispatchIncomes() {
-    dispatch(
-      addIncome({
-        id: Date.now(),
-        amount: amount,
-        comment: comment,
-
-        iconName: iconName,
-        color: color,
-        title: title,
-      })
-    );
-    handleGoback();
-  }
+  const itemData = {
+    id: Date.now(),
+    amount: amount,
+    comment: comment,
+    iconName: iconName,
+    color: color,
+    title: title,
+  };
   //
   function handleAddTransaction() {
     if (amount && amount.trim() !== "" && !isNaN(amount) && selectedId) {
       if (currentSection === "expenses" && selectedId.startsWith("e")) {
-        dispatchExpenses();
+        dispatch(addExpense(itemData));
       } else if (currentSection === "incomes" && selectedId.startsWith("i")) {
-        dispatchIncomes();
+        dispatch(addIncome(itemData));
       }
+      goBack();
     }
   }
   //
-  function handleGoback() {
-    modalHidden();
+  function goBack() {
+    navigation.goBack();
     setAmount(null);
     setSelectedId("");
     setComment("");
+    setIsFocused(false);
   }
   return (
-    <Modal visible={isVisible} animationType="slide">
+    <View style={styles.containerA}>
       <Pressable style={styles.container} onPress={() => Keyboard.dismiss()}>
-        <SemiCircle />
-        <GobackBtn handleGoback={handleGoback} />
-        <ToggleButtons
-          expensesSection={expensesSection}
-          incomesSection={incomesSection}
-          currentSection={currentSection}
-        />
+        <ToggleButtons />
         <ScrollView>
           <View style={styles.mainBody}>
             <View style={styles.amount}>
@@ -107,34 +77,37 @@ export default function NewTransactionScreen({
                   styles.amountInp,
                   isFocused && { borderBottomColor: COLORS.b },
                 ]}
-                placeholder={isFocused ? "" : "0"}
-                placeholderTextColor={COLORS.e}
                 keyboardType="numeric"
                 maxLength={8}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
                 value={amount}
-                onChangeText={(t) => setAmount(t)}
+                onChangeText={(t) => setAmount(t.trim())}
               />
               <Text style={styles.amountCur}>{currency}</Text>
             </View>
+            {!amount && (
+              <Text style={styles.warning}>
+                *amount field is required to add a transaction!
+              </Text>
+            )}
 
-            <CategoriesList
-              currentSection={currentSection}
-              handleCategorySelect={handleCategorySelect}
+            <CategoriesList handleCategorySelect={handleCategorySelect} />
+            {!selectedId && (
+              <Text style={styles.warning}>
+                *select a category to add a transaction!
+              </Text>
+            )}
+
+            <TextInput
+              style={styles.commentInpt}
+              multiline={true}
+              maxLength={200}
+              numberOfLines={9}
+              placeholder="Comment"
+              placeholderTextColor={COLORS.e}
+              onChangeText={(t) => setComment(t)}
             />
-
-            <View>
-              <TextInput
-                style={styles.commentInpt}
-                multiline={true}
-                maxLength={200}
-                numberOfLines={9}
-                placeholder="Comment"
-                placeholderTextColor={COLORS.e}
-                onChangeText={(t) => setComment(t)}
-              />
-            </View>
           </View>
         </ScrollView>
       </Pressable>
@@ -144,18 +117,22 @@ export default function NewTransactionScreen({
         currentSection={currentSection}
         selectedId={selectedId}
       />
-    </Modal>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  containerA: {
+    flex: 1,
+    borderTopColor: COLORS.d,
+    borderTopWidth: 1,
+  },
   container: {
     flex: 1,
     backgroundColor: COLORS.bg,
     alignItems: "center",
-    paddingTop: 60,
+    paddingTop: 20,
   },
-
   mainBody: {
     marginTop: 15,
   },
@@ -163,7 +140,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 20,
+    marginBottom: 10,
   },
   amountCur: {
     color: COLORS.b,
@@ -190,5 +167,10 @@ const styles = StyleSheet.create({
     marginVertical: 10,
     color: COLORS.l,
     borderRadius: 14,
+  },
+  warning: {
+    fontSize: 11,
+    textAlign: "center",
+    color: COLORS.r,
   },
 });

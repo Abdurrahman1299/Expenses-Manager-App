@@ -1,5 +1,5 @@
 import { StyleSheet, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import SemiCircle from "../components/ui/SemiCircle";
 import TransactionsList from "../components/TransactionsList";
 import { COLORS } from "../constants/colors";
@@ -9,62 +9,13 @@ import ToggleButtons from "../components/ToggleButtons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useDispatch, useSelector } from "react-redux";
 import { updateExpenses } from "../store/features/expensesSlice";
-import NewTransactionScreen from "./NewTransactionScreen";
 import { updateIncomes } from "../store/features/incomesSlice";
 
 export default function HomeScreen() {
   //
-
   const expenses = useSelector((state) => state.expenses.value);
   const incomes = useSelector((state) => state.incomes.value);
   //
-
-  const dispatch = useDispatch();
-  const [isLoading, setIsLoading] = useState(true);
-  const [currentSection, setCurrentSection] = useState("expenses");
-  const [isVisible, setIsVisisble] = useState(false);
-  //
-
-  const accuExpenses = expenses.reduce((acc, cur) => {
-    const existingItem = acc.find((item) => item.title === cur.title);
-    if (existingItem) {
-      existingItem.amount = +existingItem.amount + +cur.amount;
-    } else {
-      acc.push({
-        title: cur.title,
-        amount: cur.amount,
-        color: cur.color,
-        iconName: cur.iconName,
-      });
-    }
-    return acc;
-  }, []);
-
-  const accuIncomes = incomes.reduce((acc, cur) => {
-    const existingItem = acc.find((item) => item.title === cur.title);
-    if (existingItem) {
-      existingItem.amount = +existingItem.amount + +cur.amount;
-    } else {
-      acc.push({
-        title: cur.title,
-        amount: cur.amount,
-        color: cur.color,
-        iconName: cur.iconName,
-      });
-    }
-    return acc;
-  }, []);
-  //
-
-  const totalExpenses = accuExpenses
-    .map((item) => parseFloat(item.amount))
-    .reduce((pre, cur) => pre + cur, 0);
-
-  const totalIncomes = accuIncomes
-    .map((item) => parseFloat(item.amount))
-    .reduce((pre, cur) => pre + cur, 0);
-  //
-
   useEffect(() => {
     const loadExpenses = async () => {
       try {
@@ -91,56 +42,61 @@ export default function HomeScreen() {
     };
     loadIncomes();
   }, [expenses.length || incomes.length]);
-
   //
-  function expensesSection() {
-    setCurrentSection("expenses");
-  }
-  function incomesSection() {
-    setCurrentSection("incomes");
-  }
+  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(true);
   //
-  function modalVisible() {
-    setIsVisisble(true);
-  }
-  function modalHidden() {
-    setIsVisisble(false);
-  }
+  const accuExpenses = expenses.reduce((acc, cur) => {
+    const existingItem = acc.find((item) => item.title === cur.title);
+    if (existingItem) {
+      existingItem.amount = +existingItem.amount + +cur.amount;
+    } else {
+      acc.push({
+        title: cur.title,
+        amount: cur.amount,
+        color: cur.color,
+        iconName: cur.iconName,
+      });
+    }
+    return acc;
+  }, []);
+  //
+  const accuIncomes = incomes.reduce((acc, cur) => {
+    const existingItem = acc.find((item) => item.title === cur.title);
+    if (existingItem) {
+      existingItem.amount = +existingItem.amount + +cur.amount;
+    } else {
+      acc.push({
+        title: cur.title,
+        amount: cur.amount,
+        color: cur.color,
+        iconName: cur.iconName,
+      });
+    }
+    return acc;
+  }, []);
+  //
+  const totalExpenses = accuExpenses
+    .map((item) => parseFloat(item.amount))
+    .reduce((pre, cur) => pre + cur, 0);
 
+  const totalIncomes = accuIncomes
+    .map((item) => parseFloat(item.amount))
+    .reduce((pre, cur) => pre + cur, 0);
+  //
+  const shareableData = {
+    accuExpenses,
+    accuIncomes,
+    totalExpenses,
+    totalIncomes,
+  };
   return (
     <View style={styles.container}>
       <SemiCircle />
       <TotalSection />
-      <ToggleButtons
-        expensesSection={expensesSection}
-        incomesSection={incomesSection}
-        currentSection={currentSection}
-      />
-      <Chart
-        modalVisible={modalVisible}
-        currentSection={currentSection}
-        accuExpenses={accuExpenses}
-        accuIncomes={accuIncomes}
-        totalExpenses={totalExpenses}
-        totalIncomes={totalIncomes}
-      />
-
-      <TransactionsList
-        isLoading={isLoading}
-        currentSection={currentSection}
-        accuExpenses={accuExpenses}
-        accuIncomes={accuIncomes}
-        totalExpenses={totalExpenses}
-        totalIncomes={totalIncomes}
-      />
-
-      <NewTransactionScreen
-        currentSection={currentSection}
-        isVisible={isVisible}
-        modalHidden={modalHidden}
-        expensesSection={expensesSection}
-        incomesSection={incomesSection}
-      />
+      <ToggleButtons />
+      <Chart shareableData={shareableData} />
+      <TransactionsList shareableData={shareableData} isLoading={isLoading} />
     </View>
   );
 }

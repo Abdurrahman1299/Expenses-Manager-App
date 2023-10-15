@@ -1,20 +1,16 @@
 import { ScrollView, StyleSheet, View } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeExpense } from "../store/features/expensesSlice";
 import Loading from "./ui/Loading";
 import { removeIncome } from "../store/features/incomesSlice";
 import Transaction from "./Transaction";
 
-export default function TransactionsList({
-  isLoading,
-  currentSection,
-  accuExpenses,
-  accuIncomes,
-  totalExpenses,
-  totalIncomes,
-}) {
+export default function TransactionsList({ isLoading, shareableData }) {
   //
   const dispatch = useDispatch();
+  const currentSection = useSelector((state) => state.currentSection.value);
+  const { accuExpenses, accuIncomes, totalExpenses, totalIncomes } =
+    shareableData;
   //
   function handleRemoveTransaction(id) {
     if (currentSection === "expenses") {

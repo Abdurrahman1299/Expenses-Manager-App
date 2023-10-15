@@ -1,14 +1,20 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { COLORS } from "../constants/colors";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setToExpenses,
+  setToIncomes,
+} from "../store/features/currentSectionSlice";
 
-export default function ToggleButtons({
-  expensesSection,
-  incomesSection,
-  currentSection,
-}) {
+export default function ToggleButtons() {
+  //
+  const dispatch = useDispatch();
+  const currentSection = useSelector((state) => state.currentSection.value);
+  //
+
   return (
     <View style={styles.container}>
-      <Pressable onPress={() => expensesSection()}>
+      <Pressable onPress={() => dispatch(setToExpenses())}>
         <Text
           style={[
             styles.text,
@@ -20,7 +26,7 @@ export default function ToggleButtons({
           Expenses
         </Text>
       </Pressable>
-      <Pressable onPress={() => incomesSection()}>
+      <Pressable onPress={() => dispatch(setToIncomes())}>
         <Text
           style={[
             styles.text,

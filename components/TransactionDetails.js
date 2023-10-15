@@ -2,13 +2,14 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Feather } from "@expo/vector-icons";
 import { COLORS } from "../constants/colors";
 import DateFormat from "./utils/DateFormat";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { removeExpense } from "../store/features/expensesSlice";
 import { removeIncome } from "../store/features/incomesSlice";
 
-export default function TransactionDetails({ item, currentSection }) {
+export default function TransactionDetails({ item }) {
   //
   const dispatch = useDispatch();
+  const currentSection = useSelector((state) => state.currentSection.value);
 
   //
   function handleTransactionRemove(id) {
@@ -34,7 +35,7 @@ export default function TransactionDetails({ item, currentSection }) {
         style={styles.trash}
         onPress={() => handleTransactionRemove(item.id)}
       >
-        <Feather name="trash-2" color={COLORS.r} size={30} />
+        <Feather name="trash-2" color={COLORS.bg} size={30} />
       </TouchableOpacity>
     </View>
   );
@@ -60,6 +61,7 @@ const styles = StyleSheet.create({
   comment: {
     flex: 0.8,
     color: COLORS.l,
+    marginRight: 4,
   },
   amount: {
     flex: 0.27,
@@ -70,10 +72,10 @@ const styles = StyleSheet.create({
     paddingVertical: 4,
   },
   trash: {
-    width: 50,
-    height: 50,
+    width: 45,
+    height: 45,
     justifyContent: "center",
     alignItems: "center",
-    borderRadius: 80,
+    borderRadius: 14,
   },
 });

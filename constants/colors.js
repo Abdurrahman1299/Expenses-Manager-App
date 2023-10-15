@@ -18,16 +18,16 @@ export const SIZES = {
 };
 
 export const CATCO = {
-  a: "#ff1b1b",
-  b: "#ffb52c",
-  c: "#786b03",
-  d: "#597103",
+  a: "#9f1d1d",
+  b: "#4f2da3",
+  c: "#785703",
+  d: "#81a011",
   e: "#0b8c02",
   f: "#037048",
   h: "#06a0cb",
   i: "#085eab",
-  g: "#c443ff",
-  k: "#ff1d99",
+  g: "#7b22a3",
+  k: "#df1785",
 };
 
 export const EXPENSESCATS = [
@@ -45,6 +45,7 @@ export const EXPENSESCATS = [
   { id: "e7", color: CATCO.g, iconName: "university", title: "Education" },
   { id: "e8", color: CATCO.h, iconName: "shopping-cart", title: "Shopping" },
   { id: "e9", color: CATCO.i, iconName: "money-bill-alt", title: "Bills" },
+  { id: "e10", color: CATCO.k, iconName: "exclamation", title: "Others" },
 ];
 export const INCOMESCATS = [
   { id: "i1", color: CATCO.b, iconName: "dollar-sign", title: "Winnings" },
@@ -52,5 +53,5 @@ export const INCOMESCATS = [
   { id: "i3", color: CATCO.d, iconName: "hand-holding-usd", title: "Paycheck" },
   { id: "i4", color: CATCO.f, iconName: "gift", title: "Gift" },
   { id: "i5", color: CATCO.g, iconName: "university", title: "Interest" },
-  { id: "i6", color: CATCO.i, iconName: "question", title: "Others" },
+  { id: "i6", color: CATCO.k, iconName: "exclamation", title: "Others" },
 ];

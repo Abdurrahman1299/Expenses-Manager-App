@@ -2,13 +2,15 @@ import { StyleSheet, Text, TouchableOpacity } from "react-native";
 import React from "react";
 import { COLORS, SIZES } from "../../constants/colors";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
 export default function AddTransactionBtn({
   handleAddTransaction,
   amount,
-  currentSection,
   selectedId,
 }) {
+  //
+  const currentSection = useSelector((state) => state.currentSection.value);
   return (
     <TouchableOpacity
       style={[
@@ -16,7 +18,7 @@ export default function AddTransactionBtn({
         amount &&
           ((currentSection === "expenses" && selectedId.startsWith("e")) ||
             (currentSection === "incomes" && selectedId.startsWith("i"))) && {
-            zIndex: 9,
+            opacity: 1,
           },
       ]}
       onPress={handleAddTransaction}
@@ -35,7 +37,7 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 10,
     bottom: 10,
-    zIndex: -1,
+    opacity: 0.2,
   },
   btnTitle: {
     paddingHorizontal: 30,

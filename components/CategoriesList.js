@@ -2,13 +2,13 @@ import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useState } from "react";
 import { EXPENSESCATS, INCOMESCATS } from "../constants/colors";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { useSelector } from "react-redux";
 
-export default function CategoriesList({
-  currentSection,
-  handleCategorySelect,
-}) {
+export default function CategoriesList({ handleCategorySelect }) {
   //
-  const [selectedId, setSelectedId] = useState(null);
+  const currentSection = useSelector((state) => state.currentSection.value);
+
+  const [selectedId, setSelectedId] = useState("");
   //
   function handleSelection({ id, iconName, title, color, selectedId }) {
     handleCategorySelect({ id, iconName, title, color, selectedId });
@@ -33,9 +33,11 @@ export default function CategoriesList({
                 }
                 style={[
                   styles.item,
-                  selectedId === item.id && {
-                    backgroundColor: `${item.color}aa`,
-                  },
+                  selectedId === item.id
+                    ? {
+                        backgroundColor: `${item.color}aa`,
+                      }
+                    : null,
                 ]}
               >
                 <View

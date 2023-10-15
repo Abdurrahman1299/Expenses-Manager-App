@@ -5,10 +5,12 @@ import { useSelector } from "react-redux";
 import { COLORS, SIZES } from "../constants/colors";
 import { useNavigation } from "@react-navigation/native";
 
-export default function Transaction({ item, totalAmount, currentSection }) {
+export default function Transaction({ item, totalAmount }) {
   //
   const navigation = useNavigation();
   const currency = useSelector((state) => state.currency.value);
+  const currentSection = useSelector((state) => state.currentSection.value);
+
   //
 
   function handleOpenPreview(item) {
